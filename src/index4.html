@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+  <img src="" alt="">
+  <input type="file" style="float:right;" class="file" multiple="multiple" thumb>
+  <script>
+    var inputFile = document.querySelector('.file');
+    console.dir(URL);
+    inputFile.addEventListener('change', function () {
+      var files = this.files;
+      for (var i = 0; i < files.length; i++) {
+        var file = files[i];
+        if (file.type.match(/image\/(png|jpe?g|gif|svg)/)) {
+          console.log('是一个图片');
+          var src = URL.createObjectURL(file);
+          var img = new Image();
+          img.src = src;
+          document.body.appendChild(img);
+        } else {
+          console.log('不是一个图片')
+        }
+      }
+    })
+    function fileUpload(){
+
+    }
+    // 1.带有thumb的input file元素，会自带缩略图功能，缩略图默认会出现在右边,可以通过drop选项自定义图片摆放的位置
+    // 2.如果选项hover为true，那么鼠标移入元素后，图片会根据元素的位置进行智能的处理，图片尺寸控制在 200px
+    fileUpload({
+      hover:true,
+      drop:function(url){
+
+      }
+    });
+  </script>
+</body>
+
+</html>
