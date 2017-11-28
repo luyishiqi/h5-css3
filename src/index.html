@@ -6,54 +6,62 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
+  <link rel="stylesheet" href="css/reset.css">
+  <style>
+    body {
+      padding-top: 300px;
+    }
+
+    .upload {
+      width: 50px;
+      height: 50px;
+      margin-top: 300px;
+    }
+  </style>
 </head>
 
 <body>
-  <div class="header"></div>
-  <div class="main"></div>
-  <div class="footer"></div>
+  <input class="upload" type="file" thumb multiple="multiple">
+  <script>
+    var uploadInputs = document.querySelectorAll('input[type="file"][thumb]');
+    var imgReg = /image\/(?:png|jpe?g|git|svg)/;
 
-  <header></header>
-  <main></main>
-  <footer></footer>
+    function createImage(src, offset) {
+      var image = new Image(100);
+      image.src = src;
+      image.style.position = 'fixed';
+      image.style.left = offset.left + 'px';
+      image.style.top = offset.top + 'px';
+      return image;
+    }
 
-
-  <section>
-    <!-- 替代div -->
-  </section>
-  <article>
-    <!-- 文章 -->
-  </article>
-  <aside>
-    <!-- 侧边栏 -->
-  </aside>
-
-
-
-  <!-- 图文标签 -->
-  <figure>
-    <img src="img/big1.jpg" alt="">
-    <figcaption>
-      <h4>富家大室卡拉胶</h4>
-      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quibusdam ducimus at ad eaque libero soluta magnam recusandae
-        autem doloribus ipsum ut repudiandae velit id debitis cupiditate ea quidem, voluptatum sunt!</p>
-    </figcaption>
-  </figure>
-
-  <nav>
-    <a href="">导航1</a>
-    <a href="">导航2</a>
-    <a href="">导航3</a>
-    <a href="">导航4</a>
-    <a href="">导航5</a>
-    <a href="">导航6</a>
-    <a href="">导航7</a>
-    <a href="">导航8</a>
-    <a href="">导航9</a>
-    <a href="">导航10</a>
-  </nav>
-  <ul class="nav"></ul>
-  <progress value="95" min="0" max="100"></progress>
+    uploadInputs.forEach(function (fileInput) {
+      fileInput.addEventListener('change', function () {
+        var files = this.files; /*文件列表*/
+        var pos = {
+          x: this.offsetLeft,
+          y: this.offsetTop,
+          w: this.offsetWidth,
+          h: this.offsetHeight
+        };
+        var frame = document.createDocumentFragment();
+        for (var i = 0, len = files.length; i < len; i++) {
+          var file = files[i],
+            type = file.type;
+          if (type.match(imgReg)) {
+            // console.log(file);
+            var src = window.URL.createObjectURL(file);
+            var image = createImage(src, {
+              left: pos.x + pos.w + (i * 100),
+              top : pos.y
+            });
+            frame.appendChild(image);
+          }
+        }
+        document.body.appendChild(frame);
+      })
+    })
+  </script>
 </body>
 
 </html>

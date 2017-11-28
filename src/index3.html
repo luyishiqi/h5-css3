@@ -4,20 +4,35 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
+  <title>文件传输</title>
 </head>
 <body>
-    <input id="myCar" list="cars" />
-    <datalist id="cars">
-      <option value="BMW">
-      <option value="Ford">
-      <option value="Volvo">
-    </datalist>
-    <input type="file"> <!--只能够上传一个文件-->
-    <input type="file" multiple="multiple">
+  通过2进制传输
+  <form action="">
+    <input type="text" name="usernmae">
+  </form>
+  <input type="file" class="a">
+  <script src="js/lib/jquery.js"></script>
+  <script>
 
-    <!-- 
-      做一个文件上传实例
-     -->
+    // File
+    var bolb = new Blob();
+    
+    var formData = new FormData();
+    
+   
+
+
+    $('.a').change(function(){
+      console.log(this.files[0]);
+      formData.append("test",this.files[0]);
+      
+      var xhr = new XMLHttpRequest();
+      
+      xhr.open('POST','https://www.easy-mock.com/mock/5a17d9dab23118413626a092/api/uploadTest');
+      xhr.send(formData);
+
+    })
+  </script>
 </body>
 </html>
