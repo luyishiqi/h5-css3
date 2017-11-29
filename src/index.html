@@ -8,58 +8,226 @@
   <title>Document</title>
   <link rel="stylesheet" href="css/reset.css">
   <style>
-    body {
-      padding-top: 300px;
+    .thumb {
+      overflow: hidden;
+      padding: 30px;
+      border: 3px dashed #474747;
     }
 
-    .upload {
-      width: 50px;
-      height: 50px;
-      margin-top: 300px;
+    .thumb .thumb-img {
+      position: relative;
+      overflow: hidden;
+      float: left;
+      width: 200px;
+      height: 200px;
+      box-shadow: 0 0 10px rgba(0, 0, 0, .5);
+      margin: 10px;
+      border-radius: 50%;
+    }
+
+    .thumb .thumb-img img {
+      /* width: 100%; */
+      position: absolute;
+      transition: all 0.5s;
+    }
+    /* 如果当图片高度大于宽度的时候使用 */
+
+    .thumb .thumb-img img.transform-x {
+      left: 50%;
+      transform: translateX(-50%);
+      height: 100%;
+    }
+
+    .thumb .thumb-img img.transform-x:hover {
+      left: 50%;
+      transform: translateX(-50%) scale(1.5);
+      height: 100%;
+    }
+    /* 如果当图片宽度大于高度的时候使用 */
+
+    .thumb .thumb-img img.transform-y {
+      top: 50%;
+      transform: translateY(-50%);
+      width: 100%;
+    }
+
+    .thumb .thumb-img img.transform-y:hover {
+      transform: translateY(-50%) scale(1.5);
     }
   </style>
 </head>
 
 <body>
-  <input class="upload" type="file" thumb multiple="multiple">
+  <input class="file" type="file" multiple="multiple">
+  <div class="thumb">
+    <!-- <figute class="thumb-img">
+      <img src="img/big1.jpg" alt="" class="picure">
+    </figute>
+    <figute class="thumb-img">
+      <img src="img/big2.jpg" alt="" class="picure">
+    </figute>
+    <figute class="thumb-img">
+      <img src="img/big3.jpg" alt="" class="picure">
+    </figute>
+    <figute class="thumb-img">
+      <img src="img/big4.jpg" alt="" class="picure">
+    </figute>
+    <figute class="thumb-img">
+      <img src="img/big5.jpg" alt="" class="picure">
+    </figute>
+    <figute class="thumb-img">
+      <img src="img/big6.jpg" alt="" class="picure">
+    </figute> -->
+  </div>
+  <button class="upload">上传</button>
+  <script src="js/lib/require.js"></script>
   <script>
-    var uploadInputs = document.querySelectorAll('input[type="file"][thumb]');
-    var imgReg = /image\/(?:png|jpe?g|git|svg)/;
+    require.config({
+      paths: {
+        jquery: 'js/lib/jquery'
+      }
+    })
 
-    function createImage(src, offset) {
-      var image = new Image(100);
-      image.src = src;
-      image.style.position = 'fixed';
-      image.style.left = offset.left + 'px';
-      image.style.top = offset.top + 'px';
-      return image;
-    }
+    define('uploadFile', function (require, exports, module) {
+      var $ = require('jquery');
+      var imgReg = /image\/(?:png|jpe?g|git|svg)/;
+      var defaultOption = {
+        el: ''
+      };
 
-    uploadInputs.forEach(function (fileInput) {
-      fileInput.addEventListener('change', function () {
-        var files = this.files; /*文件列表*/
-        var pos = {
-          x: this.offsetLeft,
-          y: this.offsetTop,
-          w: this.offsetWidth,
-          h: this.offsetHeight
-        };
-        var frame = document.createDocumentFragment();
-        for (var i = 0, len = files.length; i < len; i++) {
-          var file = files[i],
-            type = file.type;
-          if (type.match(imgReg)) {
-            // console.log(file);
-            var src = window.URL.createObjectURL(file);
-            var image = createImage(src, {
-              left: pos.x + pos.w + (i * 100),
-              top : pos.y
-            });
-            frame.appendChild(image);
+      function UploadFile(option) {
+        this.config = $.extend(defaultOption, option);
+        this.inputFile = $(this.config.el);
+        this.thumbDom = this.config.thumb ? $(this.config.thumb) : null;
+        this.url = this.config.url;
+        this.files = [];
+        var _self = this;
+
+        this.inputFile.on('change', function (event) {
+          var files = this.files;
+          for (var i = 0; i < files.length; i++) {
+            _self.addFile(files[i]);
           }
+
+
+          _self.thumbDom.html('');
+
+          $.each(_self.files, function (index, file) {
+
+            if (_self.thumbDom) {
+              var url = window.URL.createObjectURL(file);
+              var image = _self.createImage(url);
+              _self.thumbDom.append(image);
+            }
+          })
+        })
+      }
+      UploadFile.prototype = {
+        constructor: UploadFile,
+        addFile: function (file) {
+          // console.log(file);
+          var size = (file.size / 1024).toFixed(2); //kb;
+          console.log(size);
+          if (size > this.config.maxsize) {
+            alert(file.name + '的大小太大了，超出了范围：' + this.config.maxsize + 'kb');
+            return;
+          } else {
+            this.files.push(file);
+          }
+
+        },
+        createImage: function (src) {
+
+          var $image = $('<img>').attr('src', src).addClass('picute');
+          console.log($image);
+          $image.load(function () {
+            var w = this.width,
+              h = this.height;
+            if (w > h) {
+              $image.addClass('transform-x');
+            }
+            if (w < h) {
+              $image.addClass('transform-y');
+            }
+          });
+
+          return $('<figute>').addClass('thumb-img').append($image).get(0);
+        },
+        start: function () {
+          var formData = new FormData();
+          var files = this.files;
+          for (var i = 0; i < files.length; i++) {
+            var file = files[i];
+            formData.append('upload', file);
+          }
+
+          this._upload(formData)
+
+        },
+        _upload: function (data) {
+          var _self = this;
+          var xhr = new XMLHttpRequest();
+          xhr.open('post', this.url);
+
+          xhr.upload.onprogress = function (e) {
+            var cur = e.loaded; //当前上传的量
+            var total = e.total; //总的量
+            _self.config.progress &&
+              _self.config.progress(cur, total);
+
+          }
+          xhr.onreadystatechange = function () {
+            if (xhr.readyState === 2) {
+              _self.config.beforeSend &&
+                _self.config.beforeSend(_self, xhr);
+            }
+            if (xhr.status === 200 && xhr.readyState === 4) {
+              _self.config.done &&
+                _self.config.done(xhr.responseText, _self, xhr);
+            }
+          }
+          xhr.send(data);
         }
-        document.body.appendChild(frame);
+      }
+
+
+      module.exports = function (option) {
+        return new UploadFile(option);
+      }
+
+    })
+
+
+    require(['jquery', 'uploadFile'], function ($, uploadFile) {
+      // console.log($);
+
+      var a = uploadFile({
+        el: '.file',
+        thumb: '.thumb', //这个选项用于将缩略放置在哪个元素里面
+        maxsize: 500, //限制图片的体积   单位为kb
+        url: 'https://www.easy-mock.com/mock/5a17d9dab23118413626a092/api/uploadTest',
+        beforeSend: function () {
+
+        },
+        progress: function (cur, total) {
+          console.log('当前上传进度为', cur / total * 100 + '%');
+        },
+
+        done: function () {
+
+        }
       })
+
+
+      $('.upload').click(function () {
+        a.start();
+      })
+
+      // console.log(uploadFile);
+
+
+
+
     })
   </script>
 </body>
