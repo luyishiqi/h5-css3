@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="./css/reset.css">
+  <style>
+    .thumb {
+      position: relative;
+      width: 500px;
+      /* height: 500px; */
+      min-height: 300px;
+      border: 3px dashed rgb(168, 168, 168);
+      border-radius: 10px;
+      padding: 10px;
+    }
+
+    .thumb img {
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="thumb"></div>
+  <script>
+    document.addEventListener('drop', function (event) {
+      event.preventDefault();
+    })
+    document.addEventListener('dragover', function (event) {
+      event.preventDefault();
+    })
+
+    var thumb = document.querySelector('.thumb');
+
+    thumb.addEventListener('dragover', function (event) {
+
+    })
+    thumb.addEventListener('drop', function (event) {
+      var files = event.dataTransfer.files;
+      for (var i = 0; i < files.length; i++) {
+        var file = files[i];
+        var src = URL.createObjectURL(file);
+        this.innerHTML += '<img src="'+src+'">'
+      }
+    })
+  </script>
+</body>
+
+</html>

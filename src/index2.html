@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="./css/reset.css">
+  <style>
+    .drag,
+    .drop {
+      float: left;
+      width: 100px;
+      margin: 10px;
+      height: 100px;
+      border: 1px solid #000;
+    }
+
+    .drag img,
+    .drop img {
+      width: 100%;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="drag" draggable="true">
+    <img class="test" src="img/sm1.jpg" draggable="true" alt="">
+  </div>
+  <div class="drop">
+
+  </div>
+  <script src="js/lib/jquery.js"></script>
+  <script>
+    // var drag = document.querySelector('.drag'),
+    //   drop = document.querySelector('.drop'),
+    //   test = document.querySelector('.test');
+    // // test.addEventListener('')
+    // test.addEventListener('dragstart', function (ev) {
+    //   console.log('开始拖动')
+    //   ev.dataTransfer.setData('test', this.className);
+    // })
+    // drop.addEventListener('dragover', function (event) {
+    //   event.preventDefault()
+    //   console.log('dragover')
+    // })
+    // drop.addEventListener('drop', function (ev) {
+    //   // console.log('drop')
+    //   // console.log(ev.dataTransfer.getData('test'))
+    //   var cls = ev.dataTransfer.getData('test');
+    //   this.appendChild(document.querySelector('.' + cls));
+    // })
+
+    // drag.addEventListener('dragover', function (event) {
+    //   event.preventDefault()
+    //   console.log('dragover')
+    // })
+    // drag.addEventListener('drop', function (ev) {
+    //   // console.log('drop')
+    //   // console.log(ev.dataTransfer.getData('test'))
+    //   var cls = ev.dataTransfer.getData('test');
+    //   this.appendChild(document.querySelector('.' + cls));
+    // })
+    // document.ondrop=function(event){
+    //   event.preventDefault();
+    //   console.log(123213);
+    // }
+    // $(document).on('drop',function(event){
+    //   event.preventDefault();
+    // })
+    // $(document).on('dragover',function(event){
+    //   event.preventDefault();
+    // })
+    // $('.drag,.drop').on('drop',function(event){
+    //   event.preventDefault();
+      
+    //   console.log(event);
+    // })
+    
+  </script>
+</body>
+
+</html>

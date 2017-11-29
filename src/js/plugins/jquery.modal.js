@@ -11,6 +11,7 @@
     btnCallbacks: null,
     template: null,
     clickIsAutoClose: true,
+    doneCallback:null,
     //模板  字符串 模板id
   }
 
@@ -52,6 +53,7 @@
         this.opt.btnCallbacks(this.modal.find('.modal-btn'), this.body, this._closeModal.bind(this));
       }
       this._apppendDom();
+      this.opt.doneCallback&& this.opt.doneCallback(this.body);
     },
     _markInit: function () {
       var _self = this;
