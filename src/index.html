@@ -5,307 +5,49 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>Document</title>
+  <title>canvas入门</title>
   <link rel="stylesheet" href="css/reset.css">
-  <link rel="stylesheet" href="css/jquery.modal.css">
   <style>
-    .thumb {
-      overflow: hidden;
-      padding: 30px;
-      border: 3px dashed #474747;
-    }
-
-    .thumb .thumb-img {
-      position: relative;
-      overflow: hidden;
-      float: left;
-      width: 200px;
-      height: 200px;
-      box-shadow: 0 0 10px rgba(0, 0, 0, .5);
-      margin: 10px;
-      border-radius: 50%;
-    }
-
-    .thumb .thumb-img img {
-      /* width: 100%; */
-      position: absolute;
-      transition: all 0.5s;
-    }
-    /* 如果当图片高度大于宽度的时候使用 */
-
-    .thumb .thumb-img img.transform-x {
-      left: 50%;
-      transform: translateX(-50%);
-      height: 100%;
-    }
-
-    .thumb .thumb-img img.transform-x:hover {
-      left: 50%;
-      transform: translateX(-50%) scale(1.5);
-      height: 100%;
-    }
-    /* 如果当图片宽度大于高度的时候使用 */
-
-    .thumb .thumb-img img.transform-y {
-      top: 50%;
-      transform: translateY(-50%);
-      width: 100%;
-    }
-
-    .thumb .thumb-img img.transform-y:hover {
-      transform: translateY(-50%) scale(1.5);
-    }
-
-    .progress-bar {
-      position: relative;
-      width: 300px;
-      height: 30px;
+    #canvas {
       border: 1px solid #000;
-    }
-
-    .progress-bar .progress {
-      position: absolute;
-      top: 0;
-      left: 0;
-      /* width: 100%; */
-      height: 100%;
-      /* background-image: linear-gradient(45deg,
-      #fff 33.33%, red 33.33%,
-      red 66.66%, #fff 66.66%
-      );
-      background-size: 10px; */
-      background-color: red;
-    }
-
-    .progress-bar span {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      text-align: center;
-      line-height: 30px;
-      color: #000;
-      font-size: 1.4em;
     }
   </style>
 </head>
 
 <body>
-  <input class="file" type="file" multiple="multiple">
-  <div class="thumb">
-    <!-- <figute class="thumb-img">
-      <img src="img/big1.jpg" alt="" class="picure">
-    </figute>
-    <figute class="thumb-img">
-      <img src="img/big2.jpg" alt="" class="picure">
-    </figute>
-    <figute class="thumb-img">
-      <img src="img/big3.jpg" alt="" class="picure">
-    </figute>
-    <figute class="thumb-img">
-      <img src="img/big4.jpg" alt="" class="picure">
-    </figute>
-    <figute class="thumb-img">
-      <img src="img/big5.jpg" alt="" class="picure">
-    </figute>
-    <figute class="thumb-img">
-      <img src="img/big6.jpg" alt="" class="picure">
-    </figute> -->
-  </div>
-  <button class="upload">上传</button>
-  <div class="progress-bar">
-    <div class="progress">
 
-    </div>
-    <span>1321%</span>
-  </div>
-  <script src="js/lib/require.js"></script>
+  <canvas id="canvas"></canvas>
   <script>
-    require.config({
-      paths: {
-        jquery: 'js/lib/jquery',
-        '$.modal': 'js/plugins/jquery.modal'
-      },
-      shim: {
-        '$.modal': {
-          deps: ['jquery'],
-          exports: '$.modal'
-        }
-      }
-    })
-
-    define('uploadFile', function (require, exports, module) {
-      var $ = require('jquery');
-      var imgReg = /image\/(?:png|jpe?g|git|svg)/;
-      $(document).on('drop', function (event) {
-        event.preventDefault();
-      })
-      $(document).on('dragover', function (event) {
-        event.preventDefault();
-      })
-      var defaultOption = {
-        el: ''
-      };
-
-      function UploadFile(option) {
-        this.config = $.extend(defaultOption, option);
-        this.inputFile = $(this.config.el);
-        this.thumbDom = this.config.thumb ? $(this.config.thumb) : null;
-        this.url = this.config.url;
-        this.files = [];
-        var _self = this;
-
-        this.inputFile.on('change', function (event) {
-          var files = this.files;
-          for (var i = 0; i < files.length; i++) {
-            _self.addFile(files[i]);
-          }
-
-          _self._init();
-
-        });
+    var canvas = document.getElementById('canvas');
+    var winWidth = window.innerWidth;
+    var winHeight =  window.innerHeight
+    canvas.width = winWidth;
+    canvas.height =winHeight;
 
 
-        if (this.config.drop) {
-          this.thumbDom.on('drop', function (event) {
-            var files = event.originalEvent.dataTransfer.files;
-            for (var i = 0; i < files.length; i++) {
-              _self.addFile(files[i]);
-            }
-            _self._init();
-          })
-        }
-      }
-      UploadFile.prototype = {
-        constructor: UploadFile,
-        addFile: function (file) {
-          // console.log(file);
-          var size = (file.size / 1024).toFixed(2); //kb;
-          console.log(size);
-          if (size > this.config.maxsize) {
-            alert(file.name + '的大小太大了，超出了范围：' + this.config.maxsize + 'kb');
-            return;
-          } else {
-            this.files.push(file);
-          }
+    // 获得画布的画笔
+    var context = canvas.getContext('2d');
+    console.log(context);
+    // 画线
+    context.beginPath();
+    context.moveTo(0, 0);//设置起点
+    context.lineTo(100,100);//设置下一个点
+    context.lineTo(500,190);
 
-        },
-        createImage: function (src) {
+    context.strokeStyle = 'red';//设置画笔颜色
+    // context.fillStyle = 'red';
+    context.stroke();//执行绘画动作
+    // context.fill();
+    context.closePath();
 
-          var $image = $('<img>').attr('src', src).addClass('picute');
-          console.log($image);
-          $image.load(function () {
-            var w = this.width,
-              h = this.height;
-            if (w > h) {
-              $image.addClass('transform-x');
-            }
-            if (w < h) {
-              $image.addClass('transform-y');
-            }
-          });
+    context.beginPath();
+    context.moveTo(winWidth,0);
+    context.lineTo(800,300);
+    context.strokeStyle='blue';
 
-          return $('<figute>').addClass('thumb-img').append($image).get(0);
-        },
-        start: function () {
-          var formData = new FormData();
-          var files = this.files;
-          for (var i = 0; i < files.length; i++) {
-            var file = files[i];
-            formData.append('upload', file);
-          }
+    context.stroke();
+    context.closePath();
 
-          this._upload(formData)
-
-        },
-        _upload: function (data) {
-          var _self = this;
-          var xhr = new XMLHttpRequest();
-          xhr.open('post', this.url);
-
-          xhr.upload.onprogress = function (e) {
-            var cur = e.loaded; //当前上传的量
-            var total = e.total; //总的量
-            _self.config.progress &&
-              _self.config.progress(cur, total);
-
-          }
-          xhr.onreadystatechange = function () {
-            if (xhr.readyState === 2) {
-              _self.config.beforeSend &&
-                _self.config.beforeSend(_self, xhr);
-            }
-            if (xhr.status === 200 && xhr.readyState === 4) {
-              _self.config.done &&
-                _self.config.done(xhr.responseText, _self, xhr);
-            }
-            console.log('====================================');
-            console.log(xhr.status);
-            console.log('====================================');
-            if (xhr.readyState === 0) {
-              console.log('错误')
-            }
-          }
-          xhr.send(data);
-        },
-        _init: function () {
-          var _self = this;
-          _self.thumbDom.html('');
-
-          $.each(_self.files, function (index, file) {
-
-            if (_self.thumbDom) {
-              var url = window.URL.createObjectURL(file);
-              var image = _self.createImage(url);
-              _self.thumbDom.append(image);
-            }
-          })
-        }
-      }
-
-
-      module.exports = function (option) {
-        return new UploadFile(option);
-      }
-
-    })
-
-
-    require(['jquery', 'uploadFile', '$.modal'], function ($, uploadFile, modal) {
-      // console.log($);
-
-      var a = uploadFile({
-        el: '.file',
-        drop: false,
-        thumb: '.thumb', //这个选项用于将缩略放置在哪个元素里面
-        maxsize: 500, //限制图片的体积   单位为kb
-        url: 'https://www.easy-mock.com/mock/5a17d9dab23118413626a092/api/uploadTest',
-        beforeSend: function () {
-
-        },
-        progress: function (cur, total) {
-          var curPro = (cur / total * 100).toFixed(2) + '%'
-          $('.progress-bar').find('.progress').css({
-            width: curPro,
-          }).next().html(curPro);
-        },
-
-        done: function () {
-          $.modal.alert('上传成功');
-        }
-      })
-
-
-      $('.upload').click(function () {
-        a.start();
-      })
-
-
-      // console.log(uploadFile);
-
-
-
-
-    })
   </script>
 </body>
 
