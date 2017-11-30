@@ -32,7 +32,14 @@
       if (!(this instanceof Draw)) {
         return new Draw(canvas);
       }
-      this.ctx = canvas.getContext('2d');
+      var c = null;
+      if (canvas.nodeType) {
+        c = canvas;
+      }
+      if (typeof canvas === 'string') {
+        c = document.querySelector(canvas);
+      }
+      this.ctx = c.getContext('2d');
     }
     Draw.prototype.start = function (x, y) {
       this.ctx.beginPath();
@@ -80,24 +87,26 @@
     }
 
 
+
+
     // Draw(canvas)
     // .start(0,0)
     // .to(123,123)
     // .to(90,78)
     // .fill('red');
-    Draw(canvas).
-    rect(0, 0, 100, 100)
-      .fill('red')
-      .square(200, 200, 89)
-      .fill('green');
+    // Draw(canvas).
+    // rect(0, 0, 100, 100)
+    //   .fill('red')
+    //   .square(200, 200, 89)
+    //   .fill('green');
 
-    for (var i = 0; i < 10; i++) {
-      // context.beginPath();
-      // context.arc(30 + (i * 120), 500, 60, 0, 2 * Math.PI, false);
-      // context.fill();
-      // context.closePath();
-      Draw(canvas).circle(30+(i*120),500,60).fill('red');
-    }
+    // for (var i = 0; i < 10; i++) {
+    //   // context.beginPath();
+    //   // context.arc(30 + (i * 120), 500, 60, 0, 2 * Math.PI, false);
+    //   // context.fill();
+    //   // context.closePath();
+    //   Draw(canvas).circle(30+(i*120),500,60).fill('red');
+    // }
   </script>
 </body>
 
