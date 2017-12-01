@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="css/reset.css">
+</head>
+
+<body>
+  <canvas id="canvas"></canvas>
+  <script src="js/draw.js"></script>
+  <script src="js/Shape.js"></script>
+  <script src="js/Stage.js"></script>
+  <script>
+    var stage = new Stage();
+    stage.addShape(
+
+      new Shape.Circle(),
+
+    )
+    stage.on('click', function (shape, stage) {
+      console.log(shape, stage);
+    })
+    stage.start();
+    // Stage.Draw('#canvas').start(0,0).to(156,356).fill('red')
+    console.log(stage);
+  </script>
+</body>
+
+</html>

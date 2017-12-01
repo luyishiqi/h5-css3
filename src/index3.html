@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+</head>
+
+<body>
+  <canvas id="canvas"></canvas>
+  <script>
+    var canvas = document.getElementById('canvas');
+    var ctx = canvas.getContext('2d');
+    canvas.width = 500;
+    canvas.height = 500;
+
+
+    var shape={
+      x:0,
+      y:0,
+      w:100,
+      h:100
+    }
+    var rect = function (shape) {
+      ctx.moveTo(shape.x, shape.y);
+      ctx.lineTo(shape.x+shape.w, shape.y);
+      ctx.lineTo(shape.x+shape.w, shape.y+shape.h);
+      ctx.lineTo(shape.x, shape.y+shape.h);
+      ctx.lineTo(shape.x, shape.y);
+      ctx.stroke();
+      ctx.closePath();
+    }
+
+    rect(shape);
+
+    canvas.onmousedown = function (e) {
+      var x = e.clientX,
+        y = e.clientY;
+      if (ctx.isPointInPath(x, y)) {
+        ctx.strokeStyle = 'red';
+        rect(shape);
+      }
+
+    }
+  </script>
+</body>
+
+</html>

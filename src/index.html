@@ -25,10 +25,10 @@
       function Circle(winWidth, winHeight) {
         this.x = ran(winWidth);
         this.y = ran(winHeight);
-        this.r = ran(1);
-        this.vx = ran();
-        this.vy = ran();
-        this.color = 'rgba(255,255,255,.15)';
+        this.r = ran(10);
+        this.vx = ran(10);
+        this.vy = ran(10);
+        this.color = Mock.Random.color();
       }
 
       Circle.prototype.draw = function (ctx) {
@@ -66,7 +66,7 @@
           ctx.beginPath();
           ctx.moveTo(this.x, this.y);
           ctx.lineTo(nextCircle.x, nextCircle.y);
-          ctx.strokeStyle = 'rgba(255,255,255,.1)'
+          ctx.strokeStyle = Mock.Random.color();
           ctx.stroke();
           ctx.closePath();
         }
@@ -148,7 +148,7 @@
 
     var stage = new Stage({
       el: '#canvas',
-      num: 500,
+      num: 50,
       width: window.innerWidth,
       height: window.innerHeight
     })
