@@ -5,49 +5,156 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
-  <title>canvas入门</title>
+  <title>Document</title>
   <link rel="stylesheet" href="css/reset.css">
-  <style>
-    #canvas {
-      border: 1px solid #000;
-    }
-  </style>
 </head>
 
 <body>
-
   <canvas id="canvas"></canvas>
+  <script src="js/draw.js"></script>
+  <script src="js/lib/mock.js"></script>
   <script>
-    var canvas = document.getElementById('canvas');
-    var winWidth = window.innerWidth;
-    var winHeight =  window.innerHeight
-    canvas.width = winWidth;
-    canvas.height =winHeight;
+    function ran(num) {
+      return num ? Math.random() * num : Math.random();
+    }
 
 
-    // 获得画布的画笔
-    var context = canvas.getContext('2d');
-    console.log(context);
-    // 画线
-    context.beginPath();
-    context.moveTo(0, 0);//设置起点
-    context.lineTo(100,100);//设置下一个点
-    context.lineTo(500,190);
+    ; //球类
+    (function (win) {
 
-    context.strokeStyle = 'red';//设置画笔颜色
-    // context.fillStyle = 'red';
-    context.stroke();//执行绘画动作
-    // context.fill();
-    context.closePath();
+      function Circle(winWidth, winHeight) {
+        this.x = ran(winWidth);
+        this.y = ran(winHeight);
+        this.r = ran(1);
+        this.vx = ran();
+        this.vy = ran();
+        this.color = 'rgba(255,255,255,.15)';
+      }
 
-    context.beginPath();
-    context.moveTo(winWidth,0);
-    context.lineTo(800,300);
-    context.strokeStyle='blue';
+      Circle.prototype.draw = function (ctx) {
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.r, 0, 360);
+        ctx.fillStyle = this.color;
+        ctx.fill();
+        ctx.closePath();
+      }
 
-    context.stroke();
-    context.closePath();
+      Circle.prototype.updata = function (ctx) {
+        var canvasWidth = ctx.canvas.width,
+          canvasHeight = ctx.canvas.height;
+        if (this.x > (canvasWidth - this.r) || this.x < this.r) {
+          this.vx = -this.vx;
+        }
 
+        if (this.y > (canvasHeight - this.r) || this.y < this.r) {
+          this.vy = -this.vy;
+        }
+
+
+        this.x += this.vx;
+        this.y += this.vy;
+
+      }
+
+
+      Circle.prototype.drawLine = function (ctx, nextCircle) {
+        var d = 100;
+        var x = nextCircle.x - this.x;
+        var y = nextCircle.y - this.y;
+        var result = Math.sqrt(x * x + y * y);
+        if (result < d) {
+          ctx.beginPath();
+          ctx.moveTo(this.x, this.y);
+          ctx.lineTo(nextCircle.x, nextCircle.y);
+          ctx.strokeStyle = 'rgba(255,255,255,.1)'
+          ctx.stroke();
+          ctx.closePath();
+        }
+      }
+
+      win.Circle = Circle;
+
+
+
+    }(window));
+
+
+    ; //舞台类
+    (function (win) {
+
+      var defaultOption = {
+        el: 'canvas',
+        num: 50
+      }
+
+      function extend(taget, obj) {
+        for (var key in obj) {
+          taget[key] = obj[key];
+        }
+        return taget;
+      }
+
+      function Stage(opt) {
+        this.config = extend(defaultOption, opt);
+
+        this.timer = null;
+        this.circles = [];
+
+        this.init();
+
+      }
+
+      Stage.prototype.draw = function () {
+        var circles = this.circles,
+          len = circles.length,
+          ctx = this.ctx;
+        // ctx.clearRect(0, 0, this.config.width, this.config.height);
+        Draw(this.canvas).rect(0,0,this.config.width,this.config.height).fill('rgba(0,0,0,.9)');
+        for (var i = 0; i < len; i++) {
+          var circle = circles[i];
+          circle.updata(ctx);
+          circle.draw(ctx);
+
+          for (var j = 1; j < len; j++) {
+            var nextCircle = circles[j];
+            circle.drawLine(ctx, nextCircle);
+          }
+
+        }
+
+      }
+      Stage.prototype.start = function () {
+        this.draw();
+        this.timer = requestAnimationFrame(this.start.bind(this));
+      }
+
+      Stage.prototype.stop = function () {
+        cancelAnimationFrame(this.timer);
+      }
+
+      Stage.prototype.init = function () {
+        this.canvas = document.querySelector(this.config.el);
+        this.canvas.width = this.config.width;
+        this.canvas.height = this.config.height;
+        this.ctx = this.canvas.getContext('2d');
+        for (var i = 0; i < this.config.num; i++) {
+          this.circles.push(new Circle(this.config.width, this.config.height));
+        }
+      }
+
+
+      win.Stage = Stage;
+    }(window));
+
+    var stage = new Stage({
+      el: '#canvas',
+      num: 500,
+      width: window.innerWidth,
+      height: window.innerHeight
+    })
+
+    stage.start();
+    console.log(stage);
   </script>
 </body>
 
