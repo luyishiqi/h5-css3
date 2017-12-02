@@ -6,27 +6,231 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
-  <link rel="stylesheet" href="css/reset.css">
+  <style>
+    .container {
+      position: relative;
+      width: 1200px;
+      margin: 0 auto;
+    }
+
+    #canvas {
+      border: 1px solid #ddd;
+      margin: 0 auto;
+    }
+
+    input {
+      border: none;
+      outline: none;
+    }
+
+    .control {
+      width: 350px;
+      position: absolute;
+      right: 0;
+      top: 0;
+    }
+
+    .btn {
+      vertical-align: middle;
+      padding: 5px 10px;
+      background-color: rgb(20, 87, 189);
+      color: #fff;
+      border-radius: 3px;
+      cursor: pointer;
+    }
+
+    .btn:active,
+    .btn.active {
+      background-color: rgb(2, 54, 136);
+    }
+  </style>
 </head>
 
 <body>
-  <canvas id="canvas"></canvas>
-  <script src="js/draw.js"></script>
-  <script src="js/Shape.js"></script>
-  <script src="js/Stage.js"></script>
+  <div class="container">
+    <canvas id="canvas"></canvas>
+    <form class="control">
+      <fieldset>
+        <legend>方向设置</legend>
+        <input type="button" key="dir" class="btn vertical" value="vertical">
+        <input type="button" key="dir" class="btn binTree" value="binTree">
+      </fieldset>
+    </form>
+  </div>
+  <script src="js/lib/jquery.js"></script>
   <script>
-    var stage = new Stage();
-    stage.addShape(
+    var canvas = document.getElementById('canvas'),
+      ctx = canvas.getContext('2d');
+    var canvasWidth = 800;
+    canvas.width = canvasWidth;
+    canvas.height = canvas.width;
 
-      new Shape.Circle(),
+    var images = [];
+    ctx.beginPath();
+    ctx.rect(0, 0, canvasWidth, canvasWidth)
+    ctx.closePath();
+    ctx.fillStyle = '#dedede';
+    ctx.fill();
+    /*
+      每一个图片对象结构如下
+      {
+        w:
+        h:
+        src:
+        name:
+        x:
+        y:
+      }
+    */
 
-    )
-    stage.on('click', function (shape, stage) {
-      console.log(shape, stage);
+    canvas.addEventListener('dragover', function (e) {
+      e.preventDefault();
     })
-    stage.start();
-    // Stage.Draw('#canvas').start(0,0).to(156,356).fill('red')
-    console.log(stage);
+
+
+    canvas.addEventListener('drop', function (e) {
+      e.preventDefault();
+      var files = e.dataTransfer.files;
+      var i = 0;
+      var len = files.length;
+      (function () {
+        var _me = arguments.callee;
+        if (i < len) {
+          var imageObject = {};
+          var file = files[i];
+          imageObject.name = file.name.match(/(.+)\.(?:png|jpe?g|gif|svg)/)[1];
+          imageObject.src = window.URL.createObjectURL(file);
+          imageObject.img = new Image();
+          imageObject.img.src = imageObject.src;
+          imageObject.img.onload = function () {
+            imageObject.w = imageObject.img.width;
+            imageObject.h = imageObject.img.height;
+            images.push(imageObject);
+
+            i++;
+            _me();
+          }
+        } else {
+
+          main();
+        }
+      }());
+
+
+    });
+
+
+
+    var config = {
+      dir: 'vertical',
+      imageUrl: '../img/sprite.png',
+      prex: 'icon_'
+    }
+
+    function updateConfig(key, value) {
+      config[key] = value;
+      console.log(config);
+      console.log(key, '更新为：', value);
+    }
+
+    $('.control').on('click', '.btn', function () {
+      var key = $(this).attr('key'),
+        val = $(this).val();
+      $(this).parent().find('input').removeClass('active');
+      $(this).addClass('active');
+      updateConfig(key, val);
+    })
+
+    function main() {
+
+      arrangeImages();
+      generatorStyleSheet();
+
+    }
+
+    function arrangeImages() {
+      var curHeight = 0;
+      var curWidth = 0;
+      console.log(images);
+      if (config.dir === 'vertical') {
+        for (var i = 0; i < images.length; i++) {
+          var image = images[i];
+          ctx.drawImage(image.img, 0, curHeight);
+          images[i].x = 0;
+          images[i].y = curHeight;
+          curHeight += image.h;
+          if (image.w > curWidth) {
+            curWidth = image.w;
+          }
+
+        }
+      } else if (config.dir === 'binTree') {
+        for (var i = 0; i < images.length; i++) {
+          var image = images[i];
+          ctx.drawImage(image.img, curWidth, 0);
+          images[i].x = curWidth;
+          images[i].y = 0;
+          curWidth += image.w;
+          if (image.h > curHeight) {
+            curHeight = image.h;
+          }
+        }
+      }
+
+      // canvas.width=curWidth;
+      // canvas.height=curHeight;
+
+      // console.log(curHeight,curWidth);
+    }
+
+    function generatorStyleSheet() {
+      var result = '';
+
+
+      for (var i = 0; i < images.length; i++) {
+        /*
+          .box{
+            backgound-image:url("");
+            backgrond-position
+
+          }
+        
+        */
+        var image = images[i];
+        if (config.dir === 'vertical') {
+          var css = [
+            '.' + config.prex + image.name + '{\n',
+            '\twidth:'+image.w+'px;\n',
+            '\theight:'+image.h+'px;\n',
+            '\tbackground-image:url(' + config.imageUrl + ');\n',
+            '\tbackground-position:' + image.x + ' -' + image.y+'px;\n',
+            '\tdisplay:block;\n',
+            '}\n'
+          ].join('');
+          result += css;
+        }
+
+        
+      }
+
+      
+    }
+
+    // var image = new Image();
+
+    // image.src = './img/sm1.jpg'
+    // image.onload = function () {
+
+    //   // 第一种用法  image  x  y
+    //   // ctx.drawImage(this, 0, 0);
+    //   // 第二种用法  image  x  y  w  h
+    //   // ctx.drawImage(this, 0, 0, 50, 50);
+    //   // 第三种语法  image  前4个是定义图像源的切片位置和大小，后4个则是定义切片的目标显示位置和大小。
+    //   ctx.drawImage(this, 50, 50, 30, 30, 0, 0, 30, 30);
+    // }
+
+
+    // drawImage()
   </script>
 </body>
 
