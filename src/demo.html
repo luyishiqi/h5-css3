@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="css/reset.css">
+  <style>
+    .videobox {
+      overflow: hidden;
+      position: relative;
+      width: 960px;
+      height: 540px;
+      margin: 0 auto;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.555);
+    }
+
+    .videobox video {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+
+    .videobox .controls {
+      display: block;
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      /* padding: 10px; */
+      line-height: 50px;
+      width: 100%;
+      background-color: rgba(255, 255, 255, .5);
+    }
+
+    .videobox .controls input {
+      vertical-align: middle;
+      margin-left: 10px;
+    }
+
+    .videobox .controls .all-screen {
+      position: absolute;
+      right: 10px;
+      top: 50%;
+      font-size: 2.5em;
+      transform: translateY(-50%);
+      color: #fff;
+      font-weight: bold;
+      cursor: pointer;
+    }
+
+    .videobox .controls .time {
+      display: inline-block;
+      margin-left: 20px;
+    }
+
+    .videobox .controls .time span {
+      font-size: 1.2em;
+      vertical-align: middle;
+    }
+
+    .progress-bar {
+      display: none;
+      cursor: pointer;
+      width: 100%;
+      position: absolute;
+      height: 10px;
+      background: #ccc;
+      bottom: 50px;
+    }
+
+    .progress-bar .progress {
+      /* transition: all 0.5s; */
+      position: relative;
+      width: 0;
+      background: red;
+      height: 100%;
+    }
+
+    .progress-bar .progress .circle {
+      position: absolute;
+      right: 0;
+      top: 0;
+      /* width: 20px; */
+      padding: 2px;
+      /* height: 20px; */
+      border-radius: 100%;
+      transform: scale(1.5);
+      border: 3px solid #fff;
+      /* transform: translateY(-50%); */
+      background: red;
+    }
+
+    .volumn-bar {
+      position: relative;
+      display: inline-block;
+      width: 100px;
+      background: rgb(114, 114, 114);
+      height: 5px;
+      border-radius: 2px;
+      margin-left: 10px;
+      /* overflow: hidden; */
+      cursor: pointer;
+    }
+
+    .volumn-bar .volumn {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      border-radius: 2px;
+      background: #fff;
+    }
+
+    .volumn-bar .volumn span {
+      position: absolute;
+      width: 10px;
+      height: 10px;
+      right: 0;
+      top: -50%;
+      border-radius: 100%;
+      background: #fff;
+    }
+  </style>
+</head>
+
+<body>
+  <!--音频标签 -->
+  <!-- <audio 
+  src="./audio/Coldplay - Hymn For The Weekend.mp3"
+  controls="controls"  
+  preload="auto"
+  autoplay="autoplay"
+  >
+  </audio> -->
+  <!-- <video src="./video/Coldplay - Hymn For The Weekend.mp4"
+    controls="controls"
+    autoplay="autoplay"
+  ></video> -->
+  <section class="videobox">
+    <video id="video" src="./video/Coldplay - Hymn For The Weekend.mp4"></video>
+    <div class="progress-bar">
+      <div class="progress">
+        <span class="circle"></span>
+      </div>
+    </div>
+    <div class="controls">
+      <input type="button" id="play" value="play">
+      <input type="button" id="pause" value="pause">
+      <div class="volumn-bar">
+        <div class="volumn">
+          <span></span>
+        </div>
+      </div>
+      <div class="time">
+        <span class="currentTime">00:00</span>/
+        <span class="duration">00:00</span>
+      </div>
+      <span class="all-screen">
+        &times;
+      </span>
+    </div>
+  </section>
+
+
+  <script src="js/lib/jquery.js"></script>
+  <script>
+    console.log(window.paramFromParent)
+    var data = {
+      a: 123
+    }
+    var videoDetail = {
+      isPlay: false,
+      duration: 0,
+    };
+
+
+
+    var $video = $('#video'),
+      video = $video.get(0),
+      $videoBox = $('.videobox'),
+      $controls = $('.controls'),
+      $progressBar = $('.progress-bar');
+
+    console.log(video.volume); /*[0,1]*/
+
+    $('.volumn-bar').on('click', function (e) {
+      var x = e.pageX;
+      var px = $(this).offset().left;
+      var pw = $(this).width();
+      var curW = x - px;
+      var num = getScale(curW, pw);
+      var width = num + '%';
+      video.volume = num / 100;
+      $('.volumn').css('width', width);
+    })
+
+
+    $videoBox.hover(function () {
+      $controls.stop().fadeIn();
+      $progressBar.stop().fadeIn();
+    }, function () {
+      $controls.stop().fadeOut();
+      $progressBar.stop().fadeOut();
+    })
+
+
+    // 开始播放
+    $controls.find('#play').on('click', function () {
+      video.play();
+      videoDetail.isPlay = true;
+    })
+    // 停止播放
+    $controls.find('#pause').on('click', function () {
+      video.pause();
+      videoDetail.isPlay = false;
+    })
+
+    $video.on('canplay', function () {
+      videoDetail.duration = video.duration;
+      // console.log(video.duration);
+      $('.duration').html(getTime(videoDetail.duration));
+    })
+    $video.on('timeupdate', function () {
+      videoDetail.currentTime = video.currentTime;
+
+      var width = getScale(videoDetail.currentTime, videoDetail.duration) + '%';
+      console.log(width);
+
+      $('.currentTime').html(getTime(videoDetail.currentTime));
+      $('.progress').css('width', width);
+      // video.volume = 0.5;
+
+    })
+
+    $progressBar.on('click', function (e) {
+      var x = e.pageX;
+      var px = $(this).offset().left;
+      var pw = $(this).width();
+      var curW = x - px;
+      var width = getScale(curW, pw) + '%';
+      $('.progress').animate({
+        width: width
+      });
+      // console.log(getScale(curW, pw));
+      var curSec = videoDetail.duration * (getScale(curW, pw) / 100);
+
+      video.currentTime = curSec;
+      // video.play();
+    })
+
+    function getScale(cur, all) {
+      return (cur / all * 100).toFixed(2);
+    }
+
+    function getTime(sec) {
+      var min = Math.floor(sec / 60);
+      var s = Math.floor(sec % 60);
+      return (min < 10 ? '0' + min : min) + ':' + (s < 10 ? '0' + s : s);
+    }
+    var isMOve = false;
+
+    function update(e) {
+      if (isMOve) {
+        var x = e.pageX;
+        var px = $progressBar.offset().left;
+        var pw = $progressBar.width();
+        var curW = x - px;
+        var width = getScale(curW, pw) + '%';
+        $('.progress').css('width', width);
+        // console.log(getScale(curW, pw));
+        var curSec = videoDetail.duration * (getScale(curW, pw) / 100);
+
+        video.currentTime = curSec;
+      }
+    }
+
+    $('.all-screen').click(function () {
+      // 设置全屏
+      video.webkitRequestFullScreen();
+    })
+    $('.progress span').on('mousedown', function () {
+      isMOve=true;
+      $(document).on('mousemove', update)
+    })
+    $('.progress span').on('mouseup', function () {
+      isMOve=false;
+      console.log('mouseup')
+      $(document).off('mousemove', update)
+    })
+
+    // $('.progress').on('mouseout', function () {
+    //   // console.log('mouseup')
+    //   $(document).off('mousemove', update)
+    // })
+  </script>
+</body>
+
+</html>

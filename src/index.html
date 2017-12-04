@@ -6,46 +6,116 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta http-equiv="X-UA-Compatible" content="ie=edge">
   <title>Document</title>
+  <link rel="stylesheet" href="css/reset.css">
   <style>
-    #canvas {
-      border: 1px solid #ddd;
+    .videobox {
+      position: relative;
+      width: 960px;
+      height: 540px;
       margin: 0 auto;
+      box-shadow: 0 0 10px rgba(0, 0, 0, 0.555);
+    }
+
+    .videobox video {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+    }
+    .videobox .controls{
+      position: absolute;
+      bottom: 0;
+      left: 0;
+      padding: 10px 0;
+      width: 100%;
+      background-color: rgba(255,255,255,.5);
     }
   </style>
 </head>
 
 <body>
-  <canvas id="canvas"></canvas>
+  <!--音频标签 -->
+  <!-- <audio 
+  src="./audio/Coldplay - Hymn For The Weekend.mp3"
+  controls="controls"  
+  preload="auto"
+  autoplay="autoplay"
+  >
+  </audio> -->
+  <!-- <video src="./video/Coldplay - Hymn For The Weekend.mp4"
+    controls="controls"
+    autoplay="autoplay"
+  ></video> -->
+  <section class="videobox">
+    <video id="video" src="./video/Coldplay - Hymn For The Weekend.mp4"></video>
+    <div class="progress-bar">
+      <div class="progress"></div>
+    </div>
+    <div class="controls">
+      <input type="button" id="play" value="play">
+      <input type="button" id="pause" value="pause">
+      <time id="time"></time>
+    </div>
+  </section>
+
+  
+  <script src="js/lib/jquery.js"></script>
   <script>
-    var canvas = document.getElementById('canvas'),
-      ctx = canvas.getContext('2d');
-    var canvasWidth = 800;
-    canvas.width = canvasWidth;
-    canvas.height = canvas.width;
+    var $video = $('#video');
+    // $video.get(0).play();
 
-    ctx.beginPath();
-    ctx.rect(0, 0, canvasWidth, canvasWidth)
-    ctx.closePath();
-    ctx.fillStyle = '#dedede';
-    ctx.fill();
+    var obj = {
+      duration: 0,
+      currentTime: 0
+    }
 
+    $('#play').on('click', function () {
+      $video.get(0).play();
+    })
 
-    // var image = new Image();
-
-    // image.src = './img/sm1.jpg'
-    // image.onload = function () {
-
-    //   // 第一种用法  image  x  y
-    //   // ctx.drawImage(this, 0, 0);
-    //   // 第二种用法  image  x  y  w  h
-    //   // ctx.drawImage(this, 0, 0, 50, 50);
-    //   // 第三种语法  image  前4个是定义图像源的切片位置和大小，后4个则是定义切片的目标显示位置和大小。
-    //   ctx.drawImage(this, 50, 50, 30, 30, 0, 0, 30, 30);
-    // }
+    $('#pause').on('click', function () {
+      $video.get(0).pause();
+    })
 
 
-    // drawImage()
-   
+    $video.on('play', function (e) {
+      console.log('视频开始播放', e.originalEvent);
+    })
+
+
+
+    $video.on('pause', function () {
+      console.log('视频已经暂停');
+    })
+
+    $video.on('abort', function () {
+      console.log('abort');
+    })
+
+    $video.on('playing', function () {
+      console.log('playing');
+      obj.duration = $video.get(0).duration;
+    })
+
+
+    $video.on('canplaythrough', function () {
+      console.log('canplaythrough');
+    })
+
+    // 正在播放的状态
+    var startTime = Date.now();
+    $video.on('timeupdate', function () {
+      var curTime = Date.now();
+      // console.log();
+      obj.currentTime = $video.get(0).currentTime;
+      $('#time').html(getTime(obj.currentTime) + '/' + getTime(obj.duration))
+      startTime = curTime;
+    })
+
+    function getTime(sec) {
+      var min = Math.floor(sec / 60);
+      var s = Math.floor(sec % 60);
+      return min + ':' + s;
+    }
   </script>
 </body>
 
