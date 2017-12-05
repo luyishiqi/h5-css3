@@ -165,15 +165,29 @@
 
   <script src="js/lib/jquery.js"></script>
   <script>
-    console.log(window.paramFromParent)
+    var db = {
+      set: function (key, data) {
+        localStorage.setItem(key, JSON.stringify(data));
+      },
+      get: function (key) {
+        return JSON.parse(localStorage.getItem(key));
+      },
+      del: function (key) {
+        localStorage.removeItem(key);
+      },
+      clear: function () {
+        localStorage.clear();
+      }
+    }
     var data = {
       a: 123
     }
     var videoDetail = {
       isPlay: false,
       duration: 0,
+      currentTime: db.get('lastPlayPos') || 0
     };
-
+    console.log(videoDetail);
 
 
     var $video = $('#video'),
@@ -182,8 +196,10 @@
       $controls = $('.controls'),
       $progressBar = $('.progress-bar');
 
-    console.log(video.volume); /*[0,1]*/
+    video.currentTime= videoDetail.currentTime;
 
+    console.log(video.volume); /*[0,1]*/
+  
     $('.volumn-bar').on('click', function (e) {
       var x = e.pageX;
       var px = $(this).offset().left;
@@ -218,6 +234,8 @@
 
     $video.on('canplay', function () {
       videoDetail.duration = video.duration;
+     
+    
       // console.log(video.duration);
       $('.duration').html(getTime(videoDetail.duration));
     })
@@ -225,11 +243,12 @@
       videoDetail.currentTime = video.currentTime;
 
       var width = getScale(videoDetail.currentTime, videoDetail.duration) + '%';
-      console.log(width);
+      
 
       $('.currentTime').html(getTime(videoDetail.currentTime));
       $('.progress').css('width', width);
       // video.volume = 0.5;
+      db.set('lastPlayPos', video.currentTime);
 
     })
 
@@ -280,11 +299,11 @@
       video.webkitRequestFullScreen();
     })
     $('.progress span').on('mousedown', function () {
-      isMOve=true;
+      isMOve = true;
       $(document).on('mousemove', update)
     })
     $('.progress span').on('mouseup', function () {
-      isMOve=false;
+      isMOve = false;
       console.log('mouseup')
       $(document).off('mousemove', update)
     })
