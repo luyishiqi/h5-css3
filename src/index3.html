@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="css/reset.css">
+  <style>
+    html,
+    body {
+      width: 100%;
+      height: 100%;
+      overflow: hidden;
+    }
+
+    .father {
+      position: relative;
+      width: 100%;
+      height: 100%;
+      /* 设置z的长度 */
+      perspective: 2000px;
+    }
+
+    .square {
+      /* 
+        z = 0
+      */
+      position: absolute;
+      width: 100px;
+      height: 100px;
+
+      top: 50%;
+      left: 50%;
+      margin-top: -50px;
+      margin-left: -50px;
+      /* 将元素设置为3d元素 */
+      transform-style: preserve-3d;
+      /* transform: rotate3d(0,1,0,0deg); */
+      animation: rotar 5s linear infinite alternate; 
+      /* transform: translate3d(0, 0, -10px); */
+    }
+    @keyframes rotar{
+      from{
+        transform: rotate3d(1,1,1,0deg);
+      }
+      to{
+        transform:rotate3d(1,1,1,359deg);
+      }
+    }
+    .box {
+      position: absolute;
+      width: 100px;
+      height: 100px;
+      line-height: 100px;
+      text-align: center;
+      opacity: .8;
+      transform-style: preserve-3d;
+      backface-visibility:hidden;
+      border: 1px solid #000;
+      box-shadow: 0 0 10px #000;
+    }
+
+    .box-1 {
+      /* 左边 */
+      transform-origin: right 0;
+      transform: rotate3d(0,1,0,-90deg);
+      top: 0;
+      left: -100%;
+      background: #ccc;
+      /* border: 1px solid #000; */
+    }
+
+    .box-2 {
+      /* 右边 */
+      transform-origin: left 0;
+      transform: rotate3d(0,1,0,90deg);
+      top: 0;
+      left: 100%;
+      background: #ccc;
+    }
+
+    .box-3 {
+      /* 上面 */
+      transform-origin: 0 bottom;
+      transform: rotate3d(1,0,0,90deg);
+      top: -100%;
+      left: 0;
+      background: #ccc;
+    }
+
+    .box-4 {
+      /* 下面 */
+      transform-origin: 0 top;
+      transform: rotate3d(1,0,0,-90deg);
+      top: 100%;
+      left: 0;
+      background: #ccc;
+    }
+
+    .box-5 {
+
+      background: #ccc;
+    }
+
+    .box-6 {
+      transform: translate3d(0,0,-100px) rotate3d(0,1,0,180deg);
+      background: #ccc;
+    }
+  </style>
+</head>
+
+<body>
+  <section class="father">
+    <div class="square">
+      <div class="box box-1">1</div>
+      <div class="box box-2">2</div>
+      <div class="box box-3">3</div>
+      <div class="box box-4">4</div>
+      <div class="box box-5">5</div>
+      <div class="box box-6">6</div>
+    </div>
+  </section>
+</body>
+
+</html>

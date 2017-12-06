@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/animate.css">
+  <style>
+    .box {
+      width: 100px;
+      height: 100px;
+      background: red;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="box animated "></div>
+  <div class="box animated "></div>
+  <input type="button" value="按钮" class="btn">
+  <script src="js/lib/jquery.js"></script>
+  <script>
+    $('.btn').click(function () {
+      $('.box').removeClass('rotateInDownLeft').addClass('rotateOutDownLeft');
+      $('.box').on('animationend', function () {
+        $(this).hide();
+      })
+    })
+
+    $('.btn').click(function () {
+      $('.box').removeClass('rotateOutDownLeft').addClass('rotateInDownLeft');
+      $('.box').on('animationstart', function () {
+        $(this).show();
+      })
+    })
+  </script>
+</body>
+
+</html>

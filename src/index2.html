@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>转换</title>
+  <link rel="stylesheet" href="css/reset.css">
+  <style>
+    .box {
+      width: 400px;
+      height: 400px;
+      background: red;
+      border: 1px solid #000;
+      margin: 50px auto;
+    }
+
+    .son {
+      width: 100px;
+      height: 100px;
+      padding: 30px;
+      background: blue;
+      /* 该属性不会影响正常文档流 */
+      /* transform: translateX(-100px); */
+      /* transform: translateY(-100px); */
+      /* 
+        %单位 相对于自身属性进行计算
+        x === 宽度
+        y === 高度
+      */
+      /* transform: translateX(50%); */
+      /* transform: translate(-30px,90px); */
+
+      /* 
+        如果参数小于1，就会缩小，大于1,则会放大，等于1，则不变
+      */
+      /* transform: scale(0.5); */
+      /* transform: rotate(-60deg); */
+
+      transition: all 0.5s;
+      /* 设置转换的源 */
+      transform-origin:right center;
+    }
+    .son:hover{
+      /* transform: scale(3); */
+      transform: skew(30deg,30deg);
+    }
+  </style>
+</head>
+
+<body>
+
+  <div class="box">
+    <div class="son">
+      房价快速搭建分开来数据的
+    </div>
+    房间打开撒垃圾疯狂拉升的荆防颗粒
+  </div>
+  <!-- 
+
+  -webkit-transform:
+    transform 
+
+    translate  位移
+    scale    缩放
+    rotate   旋转
+             扭曲
+   -->
+</body>
+
+</html>
