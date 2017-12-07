@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="css/reset.css">
+  <style>
+    .main{
+      display: flex;
+      display: -webkit-flex;
+      /* 设置项目在主轴的对齐和处理空白方式 */
+      /* justify-content:center;  */
+      /* justify-content: space-around; */
+      justify-content: space-between;
+      
+      /* 设置项目在交叉轴的对齐和处理空白方式 */
+      align-items:center; 
+      /* align-items: flex-start; */
+      /* align-items: flex-end; */
+
+      /* 设置主轴的方向 */
+      flex-direction: column;
+
+      width: 1200px;
+      height: 500px;
+      margin: 100px auto;
+      /* padding: 60px 0; */
+      box-shadow: 0 0 5px #000;
+    }
+    .main aside{
+      width: 20%;
+      background-color: lightblue;
+      padding: 30px;
+      height: 100px;
+      flex: 100;
+    }
+    .main section{
+    
+      width: 50%;
+      height: 100px;
+      padding: 30px;
+      background: red;
+    }
+    /* 
+      容器的属性组
+
+      项目的属性组
+    */
+  </style>
+</head>
+<body>
+  
+  <main class="main">
+    <aside>
+      左边的侧边栏
+    </aside>
+    <section>
+      中间的主要内容
+    </section>
+    <aside>
+      右边的侧边栏
+    </aside>
+  </main>
+</body>
+</html>

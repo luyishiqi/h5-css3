@@ -1,0 +1,139 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Document</title>
+  <link rel="stylesheet" href="css/reset.css">
+  <link rel="stylesheet" href="css/font-awesome.css">
+  <style>
+    nav{
+      position: fixed;
+      bottom: 0;
+      left: 50%;
+      transform: translateX(-50%);
+      width: 500px;
+      box-shadow: 0 0 5px #000;
+      padding: 10px 0;
+      display: flex;
+      background: #fff;
+      justify-content: space-around;
+    }
+    .nav-item{
+      display: flex;
+      flex-direction: column;
+      text-align: center;
+      cursor: pointer;
+    }
+    .nav-item:hover,
+    .nav-item.active{
+      color: red;
+    }
+    .nav-item i{
+      font-size: 2em;
+      margin-bottom: 5px;
+    }
+    .nav-item span{
+      font-size: 1.3em;
+    }
+    ul{
+      margin: 0 auto;
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: space-between;
+      width: 500px;
+      box-shadow: 0 0 5px #000;
+    }
+    ul li{
+      width: 49%;
+      padding: 10px;
+      height: 100px;
+      background: red;
+      margin-top: 10px;
+    }
+  </style>
+</head>
+
+<body>
+  <ul>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+    <li></li>
+  </ul>
+  <nav>
+    <a class="nav-item active">
+      <i class="fa fa-home"></i>
+      <span>首页</span>
+    </a>
+    <a class="nav-item">
+      <i class="fa fa-search"></i>
+      <span>搜索</span>
+    </a>
+    <a class="nav-item">
+      <i class="fa fa-shopping-cart"></i>
+      <span>首页</span>
+    </a>
+    <a class="nav-item">
+      <i class="fa fa-user"></i>
+      <span>我的</span>
+    </a>
+  </nav>
+  <script src="js/lib/jquery.js"></script>
+  <script>
+    $('.nav-item').click(function(){
+      $('.nav-item').removeClass('active');
+      $(this).addClass('active');
+    })
+  </script>
+</body>
+
+</html>
